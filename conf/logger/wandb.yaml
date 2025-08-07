@@ -1,0 +1,4 @@
+_target_: pytorch_lightning.loggers.WandbLogger
+project: "rnn_parity_generalization"
+save_dir: "logs/"
+log_model: false
