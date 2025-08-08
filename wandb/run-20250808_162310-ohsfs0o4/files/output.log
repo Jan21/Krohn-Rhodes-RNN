@@ -1,0 +1,14 @@
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+
+  | Name  | Type       | Params | Mode
+---------------------------------------------
+0 | model | CascadeRNN | 16.3 K | train
+---------------------------------------------
+16.3 K    Trainable params
+0         Non-trainable params
+16.3 K    Total params
+0.065     Total estimated model params size (MB)
+17        Modules in train mode
+0         Modules in eval mode
+Epoch 36:  56%|█████████████████████▏                | 262/469 [00:05<00:04, 45.21it/s, v_num=s0o4, train_loss=0.238, train_accuracy=0.924, val_loss=2.280, val_accuracy=0.512]
+                                                                                                                                                                               

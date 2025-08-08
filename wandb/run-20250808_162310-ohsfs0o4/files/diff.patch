@@ -1,0 +1,28 @@
+diff --git a/conf/trainer/default.yaml b/conf/trainer/default.yaml
+index a2ad35d..5a8c57f 100644
+--- a/conf/trainer/default.yaml
++++ b/conf/trainer/default.yaml
+@@ -1,5 +1,5 @@
+ _target_: pytorch_lightning.Trainer
+-max_epochs: 100
++max_epochs: 200
+ accelerator: auto
+ devices: auto
+ check_val_every_n_epoch: 1
+diff --git a/models/__init__.py b/models/__init__.py
+index 0940e24..b6ff43d 100644
+--- a/models/__init__.py
++++ b/models/__init__.py
+@@ -1,4 +1,6 @@
+ from .rnn_model import ParityRNN
+ from .lightning_module import ParityLightningModule
++from .cascade_lightning_module import CascadeLightningModule
++from .cascade_rnn import CascadeRNN
+ 
+-__all__ = ['ParityRNN', 'ParityLightningModule']
+\ No newline at end of file
++__all__ = ['ParityRNN', 'ParityLightningModule', 'CascadeLightningModule', 'CascadeRNN']
+\ No newline at end of file
+diff --git a/models/__pycache__/__init__.cpython-310.pyc b/models/__pycache__/__init__.cpython-310.pyc
+index d82ec3f..ebd9693 100644
+Binary files a/models/__pycache__/__init__.cpython-310.pyc and b/models/__pycache__/__init__.cpython-310.pyc differ

@@ -1,0 +1,5 @@
+_target_: models.cascade_lightning_module.CascadeLightningModule
+hidden_size: 100
+learning_rate: 1e-3
+num_automata: 5
+states_per_automaton: 7

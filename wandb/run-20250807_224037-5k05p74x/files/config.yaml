@@ -1,0 +1,100 @@
+_wandb:
+    value:
+        cli_version: 0.21.0
+        code_path: code/train_automaton.py
+        e:
+            8a5w3qufv7n0zzpt2lbhc7jrz7uvoseh:
+                codePath: train_automaton.py
+                codePathLocal: train_automaton.py
+                cpu_count: 24
+                cpu_count_logical: 32
+                cudaVersion: "12.4"
+                disk:
+                    /:
+                        total: "97829425152"
+                        used: "36158353408"
+                email: jan.hula21@gmail.com
+                executable: /home/jan/miniconda3/envs/LLM/bin/python
+                git:
+                    commit: 26d217b52bd951991034e5ea116e74b1eddce234
+                    remote: git@github.com:Jan21/Krohn-Rhodes-RNN.git
+                gpu: NVIDIA GeForce RTX 4080 Laptop GPU
+                gpu_count: 1
+                gpu_nvidia:
+                    - architecture: Ada
+                      cudaCores: 7424
+                      memoryTotal: "12878610432"
+                      name: NVIDIA GeForce RTX 4080 Laptop GPU
+                      uuid: GPU-94c99277-3b38-d21a-38b3-f93393bab5a1
+                host: jan-Vector-16-HX-A13VHG
+                memory:
+                    total: "31218765824"
+                os: Linux-6.14.0-27-generic-x86_64-with-glibc2.39
+                program: /home/jan/projects/CIIRC/Krohn-Rhodes-RNN/train_automaton.py
+                python: CPython 3.10.16
+                root: .
+                startedAt: "2025-08-07T20:40:37.227243Z"
+                writerId: 8a5w3qufv7n0zzpt2lbhc7jrz7uvoseh
+        m:
+            - "1": trainer/global_step
+              "6":
+                - 3
+              "7": []
+            - "2": '*'
+              "5": 1
+              "6":
+                - 1
+              "7": []
+        python_version: 3.10.16
+        t:
+            "1":
+                - 1
+                - 5
+                - 9
+                - 11
+                - 49
+                - 50
+                - 53
+                - 71
+                - 103
+            "2":
+                - 1
+                - 5
+                - 9
+                - 11
+                - 49
+                - 50
+                - 53
+                - 71
+                - 103
+            "3":
+                - 7
+                - 13
+                - 66
+            "4": 3.10.16
+            "5": 0.21.0
+            "6": 4.51.3
+            "12": 0.21.0
+            "13": linux-x86_64
+batch_size:
+    value: 32
+hidden_size:
+    value: 100
+learning_rate:
+    value: 0.001
+num_states:
+    value: 10
+num_workers:
+    value: 4
+seed:
+    value: 42
+test_samples:
+    value: 1000
+test_seq_length:
+    value: 1000
+train_samples:
+    value: 15000
+train_seq_length:
+    value: 20
+val_samples:
+    value: 2000

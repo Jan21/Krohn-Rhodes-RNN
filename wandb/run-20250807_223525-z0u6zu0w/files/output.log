@@ -1,0 +1,23 @@
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+
+  | Name  | Type         | Params | Mode
+-----------------------------------------------
+0 | model | AutomatonRNN | 11.3 K | train
+-----------------------------------------------
+11.3 K    Trainable params
+0         Non-trainable params
+11.3 K    Total params
+0.045     Total estimated model params size (MB)
+3         Modules in train mode
+0         Modules in eval mode
+Epoch 99: 100%|██████████████████████████████████████| 157/157 [00:02<00:00, 68.33it/s, v_num=zu0w, train_loss=0.104, train_accuracy=0.975, val_loss=0.971, val_accuracy=0.743]
+Testing DataLoader 0: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 32/32 [00:00<00:00, 147.78it/s]
+`Trainer.fit` stopped: `max_epochs=100` reached.
+Restoring states from the checkpoint path at ./rnn_automaton_generalization/z0u6zu0w/checkpoints/best-checkpoint-epoch=98-val_accuracy=0.747.ckpt
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+Loaded model weights from the checkpoint at ./rnn_automaton_generalization/z0u6zu0w/checkpoints/best-checkpoint-epoch=98-val_accuracy=0.747.ckpt
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+       Test metric             DataLoader 0
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+      test_accuracy         0.7475574016571045
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────

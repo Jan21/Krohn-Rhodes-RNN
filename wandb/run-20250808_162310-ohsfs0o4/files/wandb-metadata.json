@@ -1,0 +1,40 @@
+{
+  "os":  "Linux-6.14.0-27-generic-x86_64-with-glibc2.39",
+  "python":  "CPython 3.10.16",
+  "startedAt":  "2025-08-08T14:23:10.134685Z",
+  "program":  "/home/jan/projects/CIIRC/Krohn-Rhodes-RNN/train_cascade.py",
+  "codePath":  "train_cascade.py",
+  "codePathLocal":  "train_cascade.py",
+  "git":  {
+    "remote":  "git@github.com:Jan21/Krohn-Rhodes-RNN.git",
+    "commit":  "26d217b52bd951991034e5ea116e74b1eddce234"
+  },
+  "email":  "jan.hula21@gmail.com",
+  "root":  ".",
+  "host":  "jan-Vector-16-HX-A13VHG",
+  "executable":  "/home/jan/miniconda3/envs/LLM/bin/python",
+  "cpu_count":  24,
+  "cpu_count_logical":  32,
+  "gpu":  "NVIDIA GeForce RTX 4080 Laptop GPU",
+  "gpu_count":  1,
+  "disk":  {
+    "/":  {
+      "total":  "97829425152",
+      "used":  "36014546944"
+    }
+  },
+  "memory":  {
+    "total":  "31218774016"
+  },
+  "gpu_nvidia":  [
+    {
+      "name":  "NVIDIA GeForce RTX 4080 Laptop GPU",
+      "memoryTotal":  "12878610432",
+      "cudaCores":  7424,
+      "architecture":  "Ada",
+      "uuid":  "GPU-94c99277-3b38-d21a-38b3-f93393bab5a1"
+    }
+  ],
+  "cudaVersion":  "12.4",
+  "writerId":  "ubf1cg4z2rt9s2tdsnwn5to91r71zc68"
+}

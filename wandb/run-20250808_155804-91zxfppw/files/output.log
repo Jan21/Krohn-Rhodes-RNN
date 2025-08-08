@@ -1,0 +1,41 @@
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+
+  | Name  | Type       | Params | Mode
+---------------------------------------------
+0 | model | CascadeRNN | 13.8 K | train
+---------------------------------------------
+13.8 K    Trainable params
+0         Non-trainable params
+13.8 K    Total params
+0.055     Total estimated model params size (MB)
+8         Modules in train mode
+0         Modules in eval mode
+Epoch 20: 100%|█████████████████████████████████████| 469/469 [00:03<00:00, 131.78it/s, v_num=fppw, train_loss=0.102, train_accuracy=0.969, val_loss=6.030, val_accuracy=0.465]
+                                                                                                                                                                               
+============================================================
+Testing length generalization on cascade system...
+============================================================
+Restoring states from the checkpoint path at ./cascade-rnn/91zxfppw/checkpoints/best-checkpoint-epoch=05-val_accuracy=0.484.ckpt
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+Loaded model weights from the checkpoint at ./cascade-rnn/91zxfppw/checkpoints/best-checkpoint-epoch=05-val_accuracy=0.484.ckpt
+Testing DataLoader 0: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 32/32 [00:00<00:00, 336.42it/s]
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+       Test metric             DataLoader 0
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+     test_acc_auto_0        0.9524400234222412
+     test_acc_auto_1        0.5920900106430054
+     test_acc_auto_2        0.36431002616882324
+     test_acc_auto_3        0.2587999999523163
+     test_acc_auto_4        0.25332003831863403
+      test_accuracy         0.4841919243335724
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Length Generalization Results:
+Train length: 10
+Test length: 100
+Average test accuracy: 0.4842
+Automaton 0 test accuracy: 0.9524
+Automaton 1 test accuracy: 0.5921
+Automaton 2 test accuracy: 0.3643
+Automaton 3 test accuracy: 0.2588
+Automaton 4 test accuracy: 0.2533

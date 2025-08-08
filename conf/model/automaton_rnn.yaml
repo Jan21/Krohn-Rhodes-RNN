@@ -1,0 +1,4 @@
+_target_: models.automaton_lightning_module.AutomatonLightningModule
+hidden_size: 100
+learning_rate: 1e-3
+num_states: 10
