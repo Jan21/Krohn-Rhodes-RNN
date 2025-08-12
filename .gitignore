@@ -4,3 +4,4 @@ wandb
 .venv
 __pycache__/
 *.py[cod]
+snapshots/

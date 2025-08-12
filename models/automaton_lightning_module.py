@@ -2,6 +2,7 @@ import torch
 import torch.nn.functional as F
 import pytorch_lightning as pl
 from .automaton_rnn import AutomatonRNN
+from typing import Tuple,Dict
 
 
 class AutomatonLightningModule(pl.LightningModule):
@@ -65,3 +66,19 @@ class AutomatonLightningModule(pl.LightningModule):
     def configure_optimizers(self):
         optimizer = torch.optim.Adam(self.parameters(), lr=self.learning_rate)
         return optimizer
+
+    def get_core_for_extraction(self) -> Tuple[torch.nn.Module, Dict[str, int], int]:
+        """
+        Returns core_model.
+
+        Assumptions:
+        - the core RNN lives in one of: self.model / self.net / self.rnn
+        - symbol_to_idx is either defined on the module or can be built from alphabet_size
+        """
+        core = getattr(self, "model", None) or getattr(self, "net", None) or getattr(self, "rnn", None)
+        if core is None:
+            raise AttributeError(
+                "No core model found; expected an attribute named 'model', 'net', or 'rnn'."
+            )
+
+        return core

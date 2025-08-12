@@ -7,6 +7,8 @@ from pytorch_lightning.callbacks import ModelCheckpoint, EarlyStopping
 from data.automaton_datamodule import AutomatonDataModule
 from models.automaton_lightning_module import AutomatonLightningModule
 
+from callbacks.hidden_automaton_callback import HiddenAutomatonExtractionCallback
+
 
 @hydra.main(version_base=None, config_path="conf", config_name="config_automaton")
 def main(cfg: DictConfig) -> None:
@@ -53,12 +55,24 @@ def main(cfg: DictConfig) -> None:
         patience=10,
         mode="max"
     )
+
+    # Extraction callback; you can also drive its params via Hydra
+    extraction_cb = HiddenAutomatonExtractionCallback(
+        every_n_epochs=cfg.extraction.every_n_epochs,   
+        also_every_n_steps=cfg.extraction.get("every_n_steps", None),
+        out_dir=cfg.extraction.out_dir,                
+        eps=cfg.extraction.eps,                        
+        max_len=cfg.extraction.max_len,                 
+        cap_per_level=cfg.extraction.cap_per_level,    
+        save_checkpoint=True,
+        alphabet_symbols=datamodule.automaton.alphabet,             
+    )
     
     # Initialize trainer
     trainer = pl.Trainer(
         max_epochs=cfg.trainer.max_epochs,
         logger=logger,
-        callbacks=[checkpoint_callback, early_stopping],
+        callbacks=[checkpoint_callback, early_stopping,extraction_cb],
         accelerator="auto",
         devices="auto"
     )
