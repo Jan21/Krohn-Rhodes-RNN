@@ -50,6 +50,20 @@ class CascadeRNN(nn.Module):
             nn.Linear(self.hidden_per_automaton, states_per_automaton) 
             for _ in range(num_automata)
         ])
+    
+    def plot_attention(self,attn_weights):
+        """
+        attn_weights: (T, T)
+        tokens: list of token labels (strings)
+        """
+        import seaborn as sns
+        import matplotlib.pyplot as plt
+
+        plt.figure(figsize=(6, 5))
+        sns.heatmap(attn_weights, xticklabels=self.positional_encodings, yticklabels=self.positional_encodings,
+                    cmap="viridis", annot=True, fmt=".2f")
+        plt.title("Token Attention")
+        plt.show()
         
     def compute_attention(self, hidden_states):
         """
@@ -78,6 +92,9 @@ class CascadeRNN(nn.Module):
         attention_scores = torch.matmul(queries, keys.transpose(-2, -1))
         attention_scores = attention_scores / math.sqrt(self.attention_dim)
         attention_weights = F.softmax(attention_scores, dim=-1)
+
+        self.attention_scores = attention_scores
+        self.attention_weights = attention_weights
         
         # Apply attention to values
         # attention_weights: (num_automata, num_automata)
