@@ -1,15 +1,17 @@
 import numpy as np
 import torch
+import graphviz
 from typing import Dict, List, Tuple, Set
 
 
 class FiniteAutomaton:
     """A finite automaton with alphabet {0, 1, 2, 3, 4}."""
     
-    def __init__(self, num_states: int, alphabet_size: int = 5, seed: int = None):
+    def __init__(self, num_states: int, alphabet_size: int = 5, seed: int = None, name : str = "Automaton"):
         self.num_states = num_states
         self.alphabet_size = alphabet_size
         self.alphabet = list(range(alphabet_size))
+        self.name = name
         
         if seed is not None:
             np.random.seed(seed)
@@ -72,8 +74,62 @@ class FiniteAutomaton:
             'accepting_states': list(self.accepting_states),
             'transitions': dict(self.transitions)
         }
+    
+    def to_dot(self, name: str = "Automaton") -> str:
+        """
+        Export the automaton to a Graphviz DOT string.
+
+        - States are named s0, s1, ...
+        - Start arrow drawn from an invisible node
+        - Accepting states in double circles
+        - For deterministic transitions, multiple symbols that go from u to v
+        are merged into a single edge label "a,b,c".
+        """
+        # Collect labels per (u, v)
+        edge_labels = {}
+        for (u, a), v in self.transitions.items():
+            edge_labels.setdefault((u, v), []).append(a)
+
+        lines = []
+        lines.append(f'digraph {name} {{')
+        lines.append('  rankdir=LR;')
+        lines.append('  node [shape=circle];')
+
+        # Accepting states as doublecircle
+        if self.accepting_states:
+            acc = " ".join(f"s{q}" for q in sorted(self.accepting_states))
+            lines.append(f'  node [shape=doublecircle]; {acc};')
+            lines.append('  node [shape=circle];')  # reset for the rest
+
+        # Invisible start arrow
+        lines.append('  "" [shape=none, width=0, height=0, label=""];')
+        lines.append(f'  "" -> s{self.start_state};')
+
+        # Ensure all states appear even if isolated
+        for q in range(self.num_states):
+            lines.append(f'  s{q} [label="{q}"];')
+
+        # Edges with merged labels
+        for (u, v), syms in edge_labels.items():
+            # Sort labels numerically then join
+            label = ",".join(str(x) for x in sorted(syms))
+            lines.append(f'  s{u} -> s{v} [label="{label}"];')
+
+        lines.append('}')
+        return "\n".join(lines)
 
 
 def generate_random_automaton(num_states: int = 10, seed: int = None) -> FiniteAutomaton:
     """Generate a random finite automaton with the specified number of states."""
     return FiniteAutomaton(num_states=num_states, seed=seed)
+
+def render(automaton:FiniteAutomaton):
+    g = graphviz.Source(fa.to_dot("DFA"))
+    g.render("graphs/"+automaton.name, format="png", cleanup=True)
+
+
+if __name__ == "__main__":
+    fa = FiniteAutomaton(2, alphabet_size=2,seed=2)
+    print(fa.get_info())
+    render(fa)
+    
