@@ -27,6 +27,7 @@ sys.path.insert(0, parent_dir)
 from models.automaton_rnn import AutomatonRNN
 from data.automaton import FiniteAutomaton
 
+# TODO: register the model in phases and draw this automaton at each phase.
 
 # =====================
 # Utility / Converters
