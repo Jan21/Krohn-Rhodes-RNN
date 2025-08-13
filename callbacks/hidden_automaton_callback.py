@@ -6,7 +6,7 @@ import torch
 import pytorch_lightning as pl
 
 from .hidden_automaton import (
-    random_words,
+    minimize_dfa_hopcroft,
     build_dfa_until_fixpoint,
 )
 
@@ -129,6 +129,8 @@ class HiddenAutomatonExtractionCallback(pl.Callback):
             alphabet_symbols=alphabet_sorted,
             max_states=self.cap_per_level
         )
+
+        hidden_automaton = minimize_dfa_hopcroft(hidden_automaton)
 
 
         # 4) Persist results (JSON)

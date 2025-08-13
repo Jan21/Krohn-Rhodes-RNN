@@ -11,7 +11,7 @@ from callbacks.hidden_automaton_callback import HiddenAutomatonExtractionCallbac
 
 from data.automaton import FiniteAutomaton
 
-# TODO: put in the config file
+# TODO: put in the config file ? 
 AUTOMATON = FiniteAutomaton(num_states=2,alphabet_size=2)
 AUTOMATON.accepting_states = {0}
 AUTOMATON.transitions = {(0, 0): 0, (0, 1): 1, (1, 0): 1, (1, 1): 0}

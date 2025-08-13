@@ -8,6 +8,7 @@ from omegaconf import DictConfig
 from hydra.utils import instantiate
 from callbacks.attention_map_callback import AttentionMapLogger
 from data.automaton import render
+from data.cascade_automaton import render_cascade
 
 
 @hydra.main(version_base=None, config_path="conf", config_name="config_cascade")
@@ -25,8 +26,11 @@ def main(cfg: DictConfig):
     # Initialize data module
     datamodule = instantiate(cfg.data)
 
-    datamodule.automaton.name = "Cascade"
-    render(datamodule.automaton)
+    render_cascade(datamodule.cascade_system)
+    print(datamodule.cascade_system.get_info())
+
+    # datamodule.automaton.name = "Cascade"
+    # render(datamodule.automaton)
     
     # Initialize model
     model = instantiate(cfg.model)
@@ -46,7 +50,7 @@ def main(cfg: DictConfig):
         mode="max"
     )
 
-    attention_callback = AttentionMapLogger(every_n_epochs=5)
+    attention_callback = AttentionMapLogger(every_n_epochs=2)
     
     # Initialize trainer
     trainer = instantiate(cfg.trainer, callbacks=[checkpoint_callback, early_stopping,attention_callback], logger=wandb_logger)
