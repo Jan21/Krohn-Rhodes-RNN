@@ -7,8 +7,7 @@ import pytorch_lightning as pl
 
 from .hidden_automaton import (
     random_words,
-    finite_language_from_sequences,
-    build_dfa_from_language,
+    build_dfa_until_fixpoint,
 )
 
 def _automaton_to_jsonable(auto):
@@ -117,20 +116,18 @@ class HiddenAutomatonExtractionCallback(pl.Callback):
         # 1) Get core model + vocab
         core_model = pl_module.get_core_for_extraction()
 
-        strings = random_words(A=self.alphabet_symbols,n=self.max_len,k=self.cap_per_level)
-        lang = finite_language_from_sequences(strings)
-
-        alphabet_sorted = sorted(list(lang.alphabet))
+        alphabet_sorted = sorted(list(self.alphabet_symbols))
         symbol_to_idx = {a: i for i, a in enumerate(alphabet_sorted)}
         alphabet_size = len(symbol_to_idx)
 
         # Run the extraction
-        hidden_automaton = build_dfa_from_language(
-            language=lang,
+        hidden_automaton = build_dfa_until_fixpoint(
             model=core_model,
             symbol_to_idx=symbol_to_idx,
             alphabet_size=alphabet_size,
-            eps=self.eps
+            eps=self.eps, 
+            alphabet_symbols=alphabet_sorted,
+            max_states=self.cap_per_level
         )
 
 

@@ -9,6 +9,12 @@ from models.automaton_lightning_module import AutomatonLightningModule
 
 from callbacks.hidden_automaton_callback import HiddenAutomatonExtractionCallback
 
+from data.automaton import FiniteAutomaton
+
+# TODO: put in the config file
+AUTOMATON = FiniteAutomaton(num_states=2,alphabet_size=2)
+AUTOMATON.accepting_states = {0}
+AUTOMATON.transitions = {(0, 0): 0, (0, 1): 1, (1, 0): 1, (1, 1): 0}
 
 @hydra.main(version_base=None, config_path="conf", config_name="config_automaton")
 def main(cfg: DictConfig) -> None:
@@ -17,6 +23,7 @@ def main(cfg: DictConfig) -> None:
     
     # Initialize data module
     datamodule = AutomatonDataModule(
+        automaton=AUTOMATON,
         num_states=cfg.data.num_states,
         train_seq_length=cfg.data.train_seq_length,
         test_seq_length=cfg.data.test_seq_length,

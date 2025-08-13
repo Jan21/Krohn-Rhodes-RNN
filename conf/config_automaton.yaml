@@ -12,5 +12,5 @@ extraction:
   every_n_epochs: 5
   out_dir: "snapshots"
   eps: 0.2
-  max_len: 2
-  cap_per_level: 2
+  max_len: 8
+  cap_per_level: 200

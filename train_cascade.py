@@ -6,7 +6,8 @@ from pytorch_lightning.callbacks import ModelCheckpoint, EarlyStopping
 import hydra
 from omegaconf import DictConfig
 from hydra.utils import instantiate
-
+from callbacks.attention_map_callback import AttentionMapLogger
+from data.automaton import render
 
 
 @hydra.main(version_base=None, config_path="conf", config_name="config_cascade")
@@ -23,6 +24,9 @@ def main(cfg: DictConfig):
     
     # Initialize data module
     datamodule = instantiate(cfg.data)
+
+    datamodule.automaton.name = "Cascade"
+    render(datamodule.automaton)
     
     # Initialize model
     model = instantiate(cfg.model)
@@ -41,9 +45,11 @@ def main(cfg: DictConfig):
         patience=15,
         mode="max"
     )
+
+    attention_callback = AttentionMapLogger(every_n_epochs=5)
     
     # Initialize trainer
-    trainer = instantiate(cfg.trainer, callbacks=[checkpoint_callback, early_stopping], logger=wandb_logger)
+    trainer = instantiate(cfg.trainer, callbacks=[checkpoint_callback, early_stopping,attention_callback], logger=wandb_logger)
     
     # Print and log cascade system information
     system_info = {

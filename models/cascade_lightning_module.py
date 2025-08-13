@@ -116,3 +116,13 @@ class CascadeLightningModule(pl.LightningModule):
     def configure_optimizers(self):
         optimizer = torch.optim.Adam(self.parameters(), lr=self.learning_rate)
         return optimizer
+    
+    def get_attention_weights(self):
+        """
+        Return the last attention matrix (num_automata x num_automata) as a CPU numpy array.
+        Requires that a forward pass has happened (training/validation just ran).
+        """
+        W = getattr(self.model, "attention_weights", None)
+        if W is None:
+            raise RuntimeError("No attention weights cached yet. Has forward() run?")
+        return W.detach().cpu().numpy()

@@ -1,12 +1,13 @@
 import pytorch_lightning as pl
 from torch.utils.data import DataLoader
 from .automaton_dataset import AutomatonDataset
-from .automaton import generate_random_automaton
+from .automaton import generate_random_automaton, FiniteAutomaton
 
 
 class AutomatonDataModule(pl.LightningDataModule):
     def __init__(
         self,
+        automaton:FiniteAutomaton=None,
         num_states=10,
         train_seq_length=10,
         test_seq_length=50,
@@ -27,11 +28,13 @@ class AutomatonDataModule(pl.LightningDataModule):
         self.batch_size = batch_size
         self.num_workers = num_workers
         self.seed = seed
+        self.automaton = automaton
         
         self.save_hyperparameters()
         
         # Generate the random automaton once
-        self.automaton = generate_random_automaton(num_states=num_states, seed=seed)
+        if automaton is None:
+            self.automaton = generate_random_automaton(num_states=num_states, seed=seed)
     
     def setup(self, stage=None):
         if stage == "fit" or stage is None:

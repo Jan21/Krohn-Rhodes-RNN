@@ -51,19 +51,31 @@ class CascadeRNN(nn.Module):
             for _ in range(num_automata)
         ])
     
-    def plot_attention(self,attn_weights):
+    def plot_attention(self, attn_weights, filename):
         """
-        attn_weights: (T, T)
-        tokens: list of token labels (strings)
+        Save the attention map as PNG.
+        attn_weights: array-like (num_automata, num_automata)
         """
-        import seaborn as sns
         import matplotlib.pyplot as plt
+        import seaborn as sns
+        import numpy as np
+
+        # Build readable labels like A0, A1, ...
+        labels = [f"A{i}" for i in range(self.num_automata)]
 
         plt.figure(figsize=(6, 5))
-        sns.heatmap(attn_weights, xticklabels=self.positional_encodings, yticklabels=self.positional_encodings,
-                    cmap="viridis", annot=True, fmt=".2f")
-        plt.title("Token Attention")
-        plt.show()
+        sns.heatmap(
+            np.asarray(attn_weights),
+            xticklabels=labels,
+            yticklabels=labels,
+            cmap="viridis",
+            annot=True,
+            fmt=".2f"
+        )
+        plt.title("Automata Attention")
+        plt.tight_layout()
+        plt.savefig(filename, dpi=300, bbox_inches="tight")
+        plt.close()
         
     def compute_attention(self, hidden_states):
         """
