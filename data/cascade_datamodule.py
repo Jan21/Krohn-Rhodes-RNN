@@ -1,12 +1,13 @@
+# datamodule.py
 import pytorch_lightning as pl
 from torch.utils.data import DataLoader
 from .cascade_dataset import CascadeDataset
-from .cascade_automaton import generate_cascade_system
-
+from .cascade_automaton import generate_cascade_system               # old (state+prev-state dependent)
+from .output_cascade_automaton import generate_output_cascade_system # new (Mealy-style)
+from .adapters import OutputCascadeAdapter
 
 class CascadeDataModule(pl.LightningDataModule):
-    def __init__(
-        self,
+    def __init__(self,
         num_automata=5,
         states_per_automaton=3,
         alphabet_size=2,
@@ -17,7 +18,8 @@ class CascadeDataModule(pl.LightningDataModule):
         test_samples=1000,
         batch_size=32,
         num_workers=4,
-        seed=42
+        seed=42,
+        use_output_cascade: bool = False,   # <— NEW
     ):
         super().__init__()
         self.num_automata = num_automata
@@ -31,16 +33,26 @@ class CascadeDataModule(pl.LightningDataModule):
         self.batch_size = batch_size
         self.num_workers = num_workers
         self.seed = seed
-        
+        self.use_output_cascade = use_output_cascade
+
         self.save_hyperparameters()
-        
+
         # Generate the cascade system once
-        self.cascade_system = generate_cascade_system(
-            num_automata=num_automata,
-            states_per_automaton=states_per_automaton,
-            alphabet_size=alphabet_size,
-            seed=seed
-        )
+        if self.use_output_cascade:
+            base = generate_output_cascade_system(
+                num_automata=num_automata,
+                states_per_automaton=states_per_automaton,
+                alphabet_size=alphabet_size,
+                seed=seed,
+            )
+            self.cascade_system = OutputCascadeAdapter(base)
+        else:
+            self.cascade_system = generate_cascade_system(
+                num_automata=num_automata,
+                states_per_automaton=states_per_automaton,
+                alphabet_size=alphabet_size,
+                seed=seed,
+            )
     
     def setup(self, stage=None):
         if stage == "fit" or stage is None:

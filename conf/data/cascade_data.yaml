@@ -1,5 +1,5 @@
 _target_: data.cascade_datamodule.CascadeDataModule
-num_automata: 3
+num_automata: 7
 states_per_automaton: 2
 alphabet_size: 2
 train_seq_length: 10

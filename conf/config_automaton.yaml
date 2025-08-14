@@ -7,6 +7,7 @@ defaults:
 
 seed: 42
 experiment_name: "rnn_automaton_generalization"
+name: "automaton_1"
 
 extraction:
   every_n_epochs: 5

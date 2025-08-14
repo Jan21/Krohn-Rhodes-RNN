@@ -29,8 +29,6 @@ def main(cfg: DictConfig):
     render_cascade(datamodule.cascade_system)
     print(datamodule.cascade_system.get_info())
 
-    # datamodule.automaton.name = "Cascade"
-    # render(datamodule.automaton)
     
     # Initialize model
     model = instantiate(cfg.model)
@@ -50,7 +48,7 @@ def main(cfg: DictConfig):
         mode="max"
     )
 
-    attention_callback = AttentionMapLogger(every_n_epochs=2)
+    attention_callback = AttentionMapLogger(every_n_epochs=2,name=cfg.name)
     
     # Initialize trainer
     trainer = instantiate(cfg.trainer, callbacks=[checkpoint_callback, early_stopping,attention_callback], logger=wandb_logger)

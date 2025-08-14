@@ -57,10 +57,11 @@ class CascadeSystem:
     """A system of cascaded automata where each depends on the previous ones."""
     
     def __init__(self, num_automata: int = 5, states_per_automaton: int = 3, 
-                 alphabet_size: int = 2, seed: int = None):
+                 alphabet_size: int = 2, seed: int = None,name:str="CascadeSystem"):
         self.num_automata = num_automata
         self.states_per_automaton = states_per_automaton
         self.alphabet_size = alphabet_size
+        self.name = name
         
         if seed is not None:
             np.random.seed(seed)
@@ -247,10 +248,32 @@ def cascade_to_dot(
     return "\n".join(lines)
 
 
-def render_cascade(system: CascadeSystem, outfile: str = "graphs/Cascade", sequence: Optional[List[int]] = None):
+def render_cascade(system: CascadeSystem, outpath: str = "prints/graphs", sequence: Optional[List[int]] = None):
     """
     Render the cascade system to PNG. If `sequence` is provided, highlight the run.
     """
     dot = cascade_to_dot(system, name=system.__class__.__name__, sequence=sequence)
     g = graphviz.Source(dot)
-    g.render(outfile, format="png", cleanup=True)
+    g.render(outpath+"/"+system.name, format="png", cleanup=True)
+
+# adapters.py
+class OutputCascadeAdapter:
+    """
+    Wraps OutputCascadeSystem so it matches the old interface:
+      - run(sequence) -> List[List[int]]  (states only, per automaton)
+      - get_info() passed through
+    """
+    def __init__(self, sys):
+        self.sys = sys
+        # Mirror the attributes used elsewhere
+        self.num_automata = sys.num_automata
+        self.states_per_automaton = sys.states_per_automaton
+        self.alphabet_size = sys.alphabet_size
+
+    def run(self, sequence):
+        result = self.sys.run(sequence)
+        # Old code expects only the states
+        return result["states"]
+
+    def get_info(self):
+        return self.sys.get_info()

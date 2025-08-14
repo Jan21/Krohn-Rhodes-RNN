@@ -78,7 +78,8 @@ class HiddenAutomatonExtractionCallback(pl.Callback):
         *,
         alphabet_symbols: list[str],
         every_n_epochs: int = 5,
-        out_dir: str = "snapshots",
+        out_dir: str = "prints/snapshots",
+        name:str = "Automaton",
         eps: float = 0.2,
         max_len: int = 5,
         cap_per_level: int | None = 512,
@@ -135,7 +136,7 @@ class HiddenAutomatonExtractionCallback(pl.Callback):
 
         # 4) Persist results (JSON)
         auto_json = _automaton_to_jsonable(hidden_automaton)
-        out_base = self.out_dir / f"epoch_step_{tag}"
+        out_base = self.out_dir+'/'+self.name / f"epoch_step_{tag}"
         out_json = out_base.with_suffix(".json")
         payload = {
             "tag": tag,
