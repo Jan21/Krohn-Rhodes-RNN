@@ -43,7 +43,7 @@ def main(cfg: DictConfig):
     )
     
     # Initialize trainer
-    trainer = instantiate(cfg.trainer, callbacks=[checkpoint_callback, early_stopping], logger=wandb_logger)
+    trainer = instantiate(cfg.trainer, callbacks=[checkpoint_callback], logger=wandb_logger)
     
     # Print and log cascade system information
     system_info = {

@@ -2,7 +2,7 @@ import torch
 import torch.nn.functional as F
 import pytorch_lightning as pl
 from .cascade_rnn import CascadeRNN
-
+from .cascade_rnn_baseline import CascadeRNNBaseline
 
 class CascadeLightningModule(pl.LightningModule):
     def __init__(self, hidden_size=100, learning_rate=1e-3, num_automata=5, states_per_automaton=3):
@@ -18,12 +18,12 @@ class CascadeLightningModule(pl.LightningModule):
         self.num_automata = num_automata
         self.states_per_automaton = states_per_automaton
         
-    def forward(self, x):
-        return self.model(x)
+    def forward(self, x,y, train=True):
+        return self.model(x,y, train=train)
     
     def training_step(self, batch, batch_idx):
         x, y = batch
-        y_hat = self(x)  # Shape: (batch_size, seq_length, num_automata, states_per_automaton)
+        y_hat = self(x,y)  # Shape: (batch_size, seq_length, num_automata, states_per_automaton)
         
         # Compute loss for each automaton separately
         total_loss = 0
@@ -61,7 +61,7 @@ class CascadeLightningModule(pl.LightningModule):
     
     def validation_step(self, batch, batch_idx):
         x, y = batch
-        y_hat = self(x)
+        y_hat = self(x,y, train=False)
         
         total_loss = 0
         total_accuracy = 0

@@ -75,7 +75,7 @@ class CascadeSystem:
                     num_states=self.states_per_automaton,
                     alphabet_size=self.alphabet_size,
                     dependency_states=None,
-                    seed=np.random.randint(0, 10000)
+                    seed=np.random.randint(0, 10010)
                 )
             else:
                 # Subsequent automata depend on the first automaton's state
@@ -83,7 +83,7 @@ class CascadeSystem:
                     num_states=self.states_per_automaton,
                     alphabet_size=self.alphabet_size,
                     dependency_states=self.states_per_automaton,  # All depend on first automaton
-                    seed=np.random.randint(0, 10000)
+                    seed=np.random.randint(0, 10010)
                 )
             self.automata.append(automaton)
     
