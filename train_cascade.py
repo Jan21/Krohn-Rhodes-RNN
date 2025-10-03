@@ -26,8 +26,9 @@ def main(cfg: DictConfig):
     # Initialize data module
     datamodule = instantiate(cfg.data)
 
-    render_cascade(datamodule.cascade_system)
-    print(datamodule.cascade_system.get_info())
+    # TODO: Adapt this to the output cascade system.
+    # render_cascade(datamodule.cascade_system)
+    # print(datamodule.cascade_system.get_info())
 
     
     # Initialize model

@@ -152,3 +152,25 @@ def generate_output_cascade_system(
         alphabet_size=alphabet_size,
         seed=seed,
     )
+
+# adapters.py
+class OutputCascadeAdapter:
+    """
+    Wraps OutputCascadeSystem so it matches the old interface:
+      - run(sequence) -> List[List[int]]  (states only, per automaton)
+      - get_info() passed through
+    """
+    def __init__(self, sys):
+        self.sys = sys
+        # Mirror the attributes used elsewhere
+        self.num_automata = sys.num_automata
+        self.states_per_automaton = sys.states_per_automaton
+        self.alphabet_size = sys.alphabet_size
+
+    def run(self, sequence):
+        result = self.sys.run(sequence)
+        # Old code expects only the states
+        return result["states"]
+
+    def get_info(self):
+        return self.sys.get_info()

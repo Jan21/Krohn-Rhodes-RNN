@@ -5,14 +5,15 @@ from .cascade_rnn import CascadeRNN
 
 
 class CascadeLightningModule(pl.LightningModule):
-    def __init__(self, hidden_size=100, learning_rate=1e-3, num_automata=5, states_per_automaton=3):
+    def __init__(self, attention_type = None, hidden_size=100, learning_rate=1e-3, num_automata=5, states_per_automaton=3):
         super().__init__()
         self.save_hyperparameters()
         
         self.model = CascadeRNN(
             hidden_size=hidden_size,
             num_automata=num_automata,
-            states_per_automaton=states_per_automaton
+            states_per_automaton=states_per_automaton,
+            attention=attention_type
         )
         self.learning_rate = learning_rate
         self.num_automata = num_automata

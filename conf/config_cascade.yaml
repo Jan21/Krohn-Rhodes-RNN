@@ -7,4 +7,4 @@ defaults:
 
 seed: 42
 experiment_name: "rnn_cascade_generalization"
-name: "cascade_2"
+name: "cascade_6"

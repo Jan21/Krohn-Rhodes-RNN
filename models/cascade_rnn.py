@@ -2,12 +2,19 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import math
-
+from typing import Optional
+from .attention import BaseAttention, StaticPositionalAttention, ContentAttention,PastOnlyContentAttention,PastOnlyStaticPositionalAttention
 
 class CascadeRNN(nn.Module):
     """RNN for learning cascade automaton systems with attention-based communication."""
     
-    def __init__(self, input_size=1, hidden_size=100, num_automata=5, states_per_automaton=3, attention_dim=64):
+    def __init__(self, 
+                 input_size=1, 
+                 hidden_size=100, 
+                 num_automata=5, 
+                 states_per_automaton=3,
+                 attention: Optional[BaseAttention] = None,
+                 attention_dim=64):
         super(CascadeRNN, self).__init__()
         self.input_size = input_size
         self.hidden_size = hidden_size
@@ -15,10 +22,43 @@ class CascadeRNN(nn.Module):
         self.states_per_automaton = states_per_automaton
         self.attention_dim = attention_dim
         
+        
         # Hidden state size per automaton
         self.hidden_per_automaton = hidden_size // num_automata
         if hidden_size % num_automata != 0:
             raise ValueError(f"hidden_size ({hidden_size}) must be divisible by num_automata ({num_automata})")
+        
+        # Plug in attention module (default = static positional to match old behavior)
+        if attention is None or attention == "dynamic":
+            self.attn = StaticPositionalAttention(
+                num_automata=num_automata,
+                hidden_dim=self.hidden_per_automaton,
+                attn_dim=attention_dim,
+                temperature=1.0,
+            )
+        elif attention == "dynamic":
+            self.attn = ContentAttention(
+                num_automata=num_automata,
+                hidden_dim=self.hidden_per_automaton,
+                attn_dim=attention_dim,
+                temperature=1.0,
+            )
+
+        elif attention == "dynamic_past_only":
+            self.attn = PastOnlyContentAttention(
+                num_automata=num_automata,
+                hidden_dim=self.hidden_per_automaton,
+                attn_dim=attention_dim,
+                temperature=1.0,
+            )
+
+        elif attention == "static_past_only":
+            self.attn = PastOnlyStaticPositionalAttention(
+                num_automata=num_automata,
+                hidden_dim=self.hidden_per_automaton,
+                attn_dim=attention_dim,
+                temperature=1.0,
+            )
         
         # Positional encodings for each automaton ID
         self.positional_encodings = nn.Parameter(
@@ -78,47 +118,12 @@ class CascadeRNN(nn.Module):
         plt.close()
         
     def compute_attention(self, hidden_states):
-        """
-        Compute attention-based aggregation using positional encodings.
-        
-        Args:
-            hidden_states: (batch_size, num_automata, hidden_per_automaton)
-            
-        Returns:
-            aggregated_values: (batch_size, num_automata, hidden_per_automaton)
-        """
-        
-        # Generate keys and queries from positional encodings
-        # Shape: (num_automata, attention_dim)
-        keys = self.key_proj(self.positional_encodings)
-        queries = self.query_proj(self.positional_encodings)
-        
-        # Generate values from hidden states
-        # Shape: (batch_size, num_automata, attention_dim)
-        values = self.value_proj(hidden_states)
-        
-        # Compute attention scores
-        # queries: (num_automata, attention_dim)
-        # keys: (num_automata, attention_dim)
-        # attention_scores: (num_automata, num_automata)
-        attention_scores = torch.matmul(queries, keys.transpose(-2, -1))
-        attention_scores = attention_scores / math.sqrt(self.attention_dim)
-        attention_weights = F.softmax(attention_scores, dim=-1)
-
-        self.attention_scores = attention_scores
-        self.attention_weights = attention_weights
-        
-        # Apply attention to values
-        # attention_weights: (num_automata, num_automata)
-        # values: (batch_size, num_automata, attention_dim)
-        # aggregated: (batch_size, num_automata, attention_dim)
-        aggregated = torch.einsum('ij,bja->bia', attention_weights, values)
-        
-        # Project back to hidden dimension
-        # aggregated_values: (batch_size, num_automata, hidden_per_automaton)
-        aggregated_values = self.output_proj(aggregated)
-        
-        return aggregated_values
+        # hidden_states: (B, N, H) -> aggregated: (B, N, H)
+        aggregated = self.attn(hidden_states)
+        W = self.attn.get_last_weights()  # (B, N, N) or None
+        if W is not None:
+            self.attention_weights = W.mean(dim=0).detach()  # (N, N)
+        return aggregated
         
     def forward(self, x):
         batch_size, seq_length = x.size(0), x.size(1)

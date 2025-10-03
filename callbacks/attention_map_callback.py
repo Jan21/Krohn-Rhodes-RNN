@@ -7,7 +7,7 @@ class AttentionMapLogger(Callback):
         self.every_n_epochs = every_n_epochs
         self.save_dir = save_dir
         self.name = name
-        os.makedirs(save_dir, exist_ok=True)
+        os.makedirs(save_dir+'/'+self.name, exist_ok=True)
 
     def on_validation_epoch_end(self, trainer, pl_module):
         # only one process writes files

@@ -1,10 +1,10 @@
-# datamodule.py
+# cascade_datamodule.py
 import pytorch_lightning as pl
 from torch.utils.data import DataLoader
 from .cascade_dataset import CascadeDataset
 from .cascade_automaton import generate_cascade_system               # old (state+prev-state dependent)
 from .output_cascade_automaton import generate_output_cascade_system # new (Mealy-style)
-from .adapters import OutputCascadeAdapter
+from .output_cascade_automaton import OutputCascadeAdapter
 
 class CascadeDataModule(pl.LightningDataModule):
     def __init__(self,
